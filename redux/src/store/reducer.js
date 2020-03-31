@@ -28,7 +28,7 @@ export default (state = defaultState, action) => {
     }
     if (action.type === INIT_LIST) {
         let newState = JSON.parse(JSON.stringify(state))
-        newState.list = action.value.list
+        newState.list = action.value.data.list
         return newState
     }
     return state

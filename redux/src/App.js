@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import store from './store/index'
-import { changeInputAction, addItemAction, delItemAction, initListAction, getTodoList } from './store/actionCreator'
+import { getInitListAction, changeInputAction, addItemAction, delItemAction, initListAction } from './store/actionCreator'
 import AppUI from './AppUI';
+
 
 class App extends Component {
     constructor(props) {
@@ -15,10 +16,17 @@ class App extends Component {
     }
     componentDidMount() {
         this.updata()
-        const action = getTodoList()
-        // console.log(action)
+        // axios.get('https://www.fastmock.site/mock/53f5c04c3ae44cfb6d0ea6855cce85d5/react/api/findall')
+        //     .then((res) => {
+        //         const { data } = res.data
+        //         const action = initListAction(data)
+        //         store.dispatch(action)
+        //         // console.log(data)
+        //     })
+        const action = getInitListAction()
         store.dispatch(action)
     }
+
     render() {
         const { list, inputValue } = this.state
         return (
