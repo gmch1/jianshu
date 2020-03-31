@@ -1,12 +1,11 @@
-import { ADD_ITEM, CHANEG_INPUT, DET_ITEM } from './actionTypes'
+import { ADD_ITEM, CHANEG_INPUT, DET_ITEM, INIT_LIST } from './actionTypes'
 
 const defaultState = {
     inputValue: '2',
     list: [
         '1Racing car sprays burning fuel into crowd.',
         '2Japanese princess to wed commoner.',
-        '3Australian walks 100km after outback crash.',
-        '4Man charged over missing wedding girl.',
+
         '5Los Angeles battles huge wildfires.',
     ]
 }
@@ -25,6 +24,11 @@ export default (state = defaultState, action) => {
     if (action.type === DET_ITEM) {
         let newState = JSON.parse(JSON.stringify(state))
         newState.list.splice(action.value, 1)
+        return newState
+    }
+    if (action.type === INIT_LIST) {
+        let newState = JSON.parse(JSON.stringify(state))
+        newState.list = action.value.list
         return newState
     }
     return state

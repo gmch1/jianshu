@@ -1,21 +1,23 @@
-import React, { Component, Fragment } from 'react';
-import { Button, Input, List } from 'antd';
+import React, { Component } from 'react';
 import store from './store/index'
-import { changeInputAction, addItemAction, delItemAction } from './store/actionCreator'
+import { changeInputAction, addItemAction, delItemAction, initListAction, getTodoList } from './store/actionCreator'
 import AppUI from './AppUI';
 
 class App extends Component {
     constructor(props) {
         super(props)
-        this.state ={
-            inputValue:'',
-            list:[]
+        this.state = {
+            inputValue: '',
+            list: []
         }
-        
+
         store.subscribe(this.updata)
     }
-    componentDidMount(){
+    componentDidMount() {
         this.updata()
+        const action = getTodoList()
+        // console.log(action)
+        store.dispatch(action)
     }
     render() {
         const { list, inputValue } = this.state
@@ -35,7 +37,7 @@ class App extends Component {
         store.dispatch(action)
     }
     updata = () => {
-        const {list,inputValue} = store.getState()
+        const { list, inputValue } = store.getState()
         this.setState({
             list,
             inputValue

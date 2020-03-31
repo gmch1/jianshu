@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, {  Fragment } from 'react';
 import { Button, Input, List } from 'antd';
 
 export default function AppUI(props) {
