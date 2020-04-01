@@ -1,66 +1,50 @@
-import React, { Component } from 'react';
-import store from './store/index'
-import { getInitListAction, changeInputAction, addItemAction, delItemAction, initListAction } from './store/actionCreator'
-import AppUI from './AppUI';
+import React from 'react';
+// import store from './store'
+import { connect } from 'react-redux'
+import { changInputValueAction, handleClickAction, delItemAction } from './store/actionCreator';
 
 
-class App extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            inputValue: '',
-            list: []
+function App(props) {
+    const { list, handleDel, handleClick, changeInput, inputValue } = props
+    return (
+        <div>
+            {/* {this.state} */}
+            <input type="text" onChange={changeInput} value={inputValue} />
+            <button onClick={handleClick}>add</button>
+            <ul>
+                {
+                    list.map((item, index) => {
+                        return (<li onClick={() => handleDel(index)} key={index + item}>{item}</li>)
+                    })
+                }
+            </ul>
+        </div>
+    );
+}
+
+const mapStateProps = (state) => {
+    return {
+        inputValue: state.inputValue,
+        list: state.list
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeInput(e) {
+            const action = changInputValueAction(e.target.value)
+            dispatch(action)
+        },
+        handleClick() {
+            const action = handleClickAction()
+            dispatch(action)
+
+        },
+        handleDel(index) {
+            const action = delItemAction(index)
+            dispatch(action)
+
         }
-
-        store.subscribe(this.updata)
-    }
-    componentDidMount() {
-        this.updata()
-        // axios.get('https://www.fastmock.site/mock/53f5c04c3ae44cfb6d0ea6855cce85d5/react/api/findall')
-        //     .then((res) => {
-        //         const { data } = res.data
-        //         const action = initListAction(data)
-        //         store.dispatch(action)
-        //         // console.log(data)
-        //     })
-        const action = getInitListAction()
-        store.dispatch(action)
-    }
-
-    render() {
-        const { list, inputValue } = this.state
-        return (
-            <AppUI
-                list={list}
-                inputValue={inputValue}
-                changeinput={this.changeinput}
-                handleClick={this.handleClick}
-                del={this.del}
-            />
-        );
-    }
-    changeinput = (e) => {
-        let action = changeInputAction(e.target.value)
-
-        store.dispatch(action)
-    }
-    updata = () => {
-        const { list, inputValue } = store.getState()
-        this.setState({
-            list,
-            inputValue
-        })
-    }
-    handleClick = () => {
-        let action = addItemAction()
-        store.dispatch(action)
-    }
-    del = (e) => {
-
-        let action = delItemAction(e)
-        store.dispatch(action)
-
     }
 }
 
-export default App;
+export default connect(mapStateProps, mapDispatchToProps)(App);

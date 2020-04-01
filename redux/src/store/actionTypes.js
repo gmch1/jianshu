@@ -1,5 +1,3 @@
-export const ADD_ITEM = 'addItem'
-export const CHANEG_INPUT = 'changeInput'
-export const DET_ITEM = 'delItem'
-export const INIT_LIST = 'initList'
-export const INIT_LIST_ACTION = 'initlistaction'
+export const DEL_ITEM = 'del_item'
+export const ADD_ITEM = 'add_item'
+export const CHANGE_INPUT_VALUE = 'change_input_vlue'
