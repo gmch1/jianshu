@@ -8,7 +8,7 @@ import { actionCreator } from './store'
 class Header extends Component {
 
     render() {
-        const { handleInputFocus, handleInputBlur, focused } = this.props
+        const { handleInputFocus, handleInputBlur, focused, list } = this.props
 
         return (
             <HeaderWrapper>
@@ -38,7 +38,7 @@ class Header extends Component {
                         <i className={focused ? 'focused iconfont zoom' : 'iconfont zoom'}>
                             &#xe614;
 						</i>
-                       {focused?( <SearchInfo>
+                        {focused ? (<SearchInfo>
                             <SearchInfoTitle>
                                 热门搜索
                                 <SearchInfoSwitch>
@@ -46,15 +46,12 @@ class Header extends Component {
                                 </SearchInfoSwitch>
                             </SearchInfoTitle>
                             <div>
-                                <SearchInfoItem>教育</SearchInfoItem>
-                                <SearchInfoItem>简书</SearchInfoItem>
-                                <SearchInfoItem>生活</SearchInfoItem>
-                                <SearchInfoItem>读稿</SearchInfoItem>
-                                <SearchInfoItem>历史</SearchInfoItem>
-                                <SearchInfoItem>考研</SearchInfoItem>
-                                <SearchInfoItem>PHP</SearchInfoItem>
+                                {
+                                    list.map((item, index) => (<SearchInfoItem key={item + index}>{item}</SearchInfoItem>))
+                                }
+
                             </div>
-                        </SearchInfo>):('')}
+                        </SearchInfo>) : ('')}
                     </SearchWrapper>
                 </Nav>
                 <Addition>
@@ -70,12 +67,14 @@ class Header extends Component {
 }
 const mapStateToProps = (state) => {
     return ({
-        focused: state.get('header').get('focused')
+        focused: state.get('header').get('focused'),
+        list: state.get('header').get('list')
     })
 }
 const mapDispatchToProps = (dispatch) => {
     return {
         handleInputFocus() {
+            dispatch(actionCreator.getList())
             dispatch(actionCreator.changeFocus())
         },
         handleInputBlur() {
