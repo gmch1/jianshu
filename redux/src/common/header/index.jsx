@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { HeaderWrapper, Logo, Nav, NavItem, SearchWrapper, Addition, Button, NavSearch } from './style';
+import { HeaderWrapper, Logo, Nav, NavItem, SearchWrapper, Addition, Button, NavSearch, SearchInfo, SearchInfoTitle, SearchInfoSwitch, SearchInfoItem } from './style';
 import { CSSTransition } from 'react-transition-group'
+import { connect } from 'react-redux'
+import { actionCreator } from './store'
+
 
 class Header extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            focused: false
-        }
-    }
+
     render() {
+        const { handleInputFocus, handleInputBlur, focused } = this.props
+
         return (
             <HeaderWrapper>
                 <Logo />
@@ -26,18 +26,35 @@ class Header extends Component {
                     <SearchWrapper>
                         <CSSTransition
                             timeout={200}
-                            in={this.state.focused}
+                            in={focused}
                             classNames='slide'
                         >
                             <NavSearch
-                                className={this.state.focused ? 'focused' : ''}
-                                onFocus={this.handleInputFocus}
-                                onBlur={this.handleInputBlur}
+                                className={focused ? 'focused' : ''}
+                                onFocus={handleInputFocus}
+                                onBlur={handleInputBlur}
                             ></NavSearch>
                         </CSSTransition>
-                        <i className={this.state.focused ? 'focused iconfont zoom' : 'iconfont zoom'}>
+                        <i className={focused ? 'focused iconfont zoom' : 'iconfont zoom'}>
                             &#xe614;
 						</i>
+                       {focused?( <SearchInfo>
+                            <SearchInfoTitle>
+                                热门搜索
+                                <SearchInfoSwitch>
+                                    换一换
+                                </SearchInfoSwitch>
+                            </SearchInfoTitle>
+                            <div>
+                                <SearchInfoItem>教育</SearchInfoItem>
+                                <SearchInfoItem>简书</SearchInfoItem>
+                                <SearchInfoItem>生活</SearchInfoItem>
+                                <SearchInfoItem>读稿</SearchInfoItem>
+                                <SearchInfoItem>历史</SearchInfoItem>
+                                <SearchInfoItem>考研</SearchInfoItem>
+                                <SearchInfoItem>PHP</SearchInfoItem>
+                            </div>
+                        </SearchInfo>):('')}
                     </SearchWrapper>
                 </Nav>
                 <Addition>
@@ -49,16 +66,22 @@ class Header extends Component {
             </HeaderWrapper>
         );
     }
-    handleInputFocus = () => {
-        this.setState({
-            focused: true
-        })
-    }
-    handleInputBlur = () => {
-        this.setState({
-            focused: false
-        })
+
+}
+const mapStateToProps = (state) => {
+    return ({
+        focused: state.get('header').get('focused')
+    })
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        handleInputFocus() {
+            dispatch(actionCreator.changeFocus())
+        },
+        handleInputBlur() {
+            dispatch(actionCreator.changeFocus())
+        }
     }
 }
 
-export default Header;
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

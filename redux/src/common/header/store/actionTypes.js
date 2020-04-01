@@ -1,0 +1,1 @@
+export const CHANGE_FOCUS = 'header/change_focus'
