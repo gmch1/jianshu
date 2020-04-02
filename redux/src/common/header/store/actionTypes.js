@@ -1,2 +1,5 @@
 export const CHANGE_FOCUS = 'header/change_focus'
-export const CHANGE_LIST = 'change_list'
+export const CHANGE_LIST = 'header/change_list'
+export const MOUSE_INTER = 'header/mouse_enter'
+export const MOUSE_LEAVE = 'header/mouse_leave'
+export const CHANGE_PAGE = 'header/change_page'

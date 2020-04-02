@@ -7,8 +7,44 @@ import { actionCreator } from './store'
 
 class Header extends Component {
 
+    getListArea() {
+        const { focused, list, page, totalPage, mouseIn, handleMouseEnter, handleMouseLeave, handleChangePage } = this.props
+        const newList = list.toJS()
+        const pageList = []
+        if (newList.length) {
+            for (let i = (page - 1) * 10; i < page * 10; i++) {
+                pageList.push(
+                    <SearchInfoItem key={newList[i] + i}>{newList[i]}</SearchInfoItem>
+                )
+            }
+
+        }
+
+        if (focused || mouseIn) {
+            return (
+                <SearchInfo
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                >
+                    <SearchInfoTitle >
+                        热门搜索
+                <SearchInfoSwitch
+                            onClick={() => handleChangePage(totalPage, page, this.spinIcon)}
+                        >
+                            <i ref={icon => this.spinIcon = icon} className="iconfont spin">&#xe851;</i>
+                            换一换
+                </SearchInfoSwitch>
+                    </SearchInfoTitle>
+                    <div>
+                        {pageList}
+
+                    </div>
+                </SearchInfo>)
+        }
+    }
     render() {
         const { handleInputFocus, handleInputBlur, focused, list } = this.props
+
 
         return (
             <HeaderWrapper>
@@ -31,14 +67,14 @@ class Header extends Component {
                         >
                             <NavSearch
                                 className={focused ? 'focused' : ''}
-                                onFocus={handleInputFocus}
+                                onFocus={() => handleInputFocus(list)}
                                 onBlur={handleInputBlur}
                             ></NavSearch>
                         </CSSTransition>
                         <i className={focused ? 'focused iconfont zoom' : 'iconfont zoom'}>
                             &#xe614;
 						</i>
-                        {focused ? (<SearchInfo>
+                        {/* {focused ? (<SearchInfo>
                             <SearchInfoTitle>
                                 热门搜索
                                 <SearchInfoSwitch>
@@ -51,7 +87,9 @@ class Header extends Component {
                                 }
 
                             </div>
-                        </SearchInfo>) : ('')}
+                        </SearchInfo>) : ('')} */
+                            this.getListArea()
+                        }
                     </SearchWrapper>
                 </Nav>
                 <Addition>
@@ -68,17 +106,43 @@ class Header extends Component {
 const mapStateToProps = (state) => {
     return ({
         focused: state.get('header').get('focused'),
-        list: state.get('header').get('list')
+        list: state.get('header').get('list'),
+        page: state.get('header').get('page'),
+        totalPage: state.get('header').get('totalPage'),
+        mouseIn: state.get('header').get('mouseIn'),
     })
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        handleInputFocus() {
-            dispatch(actionCreator.getList())
+        handleInputFocus(list) {
+            (list.size === 0) && dispatch(actionCreator.getList())
             dispatch(actionCreator.changeFocus())
         },
         handleInputBlur() {
             dispatch(actionCreator.changeFocus())
+        },
+        handleMouseEnter() {
+            dispatch(actionCreator.mouseEnter())
+        },
+        handleMouseLeave() {
+            dispatch(actionCreator.mouseLeave())
+        },
+        handleChangePage(totalPage, page, icon) {
+            // icon.style.transform='rotate(360deg)'
+            let organAngle = icon.style.transform.replace(/[^0-9]/ig, '')
+            if (organAngle) {
+                organAngle = parseInt(organAngle, 10)
+            } else {
+                organAngle = 0
+            }
+
+            icon.style.transform = 'rotate(' + (organAngle + 360) + 'deg)'
+
+            if (page < totalPage) {
+                return dispatch(actionCreator.chanegPage(page + 1))
+            } else {
+                return dispatch(actionCreator.chanegPage(1))
+            }
         }
     }
 }
