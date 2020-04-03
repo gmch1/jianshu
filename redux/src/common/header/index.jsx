@@ -4,6 +4,7 @@ import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import { actionCreator } from './store'
 import { Link } from 'react-router-dom';
+import { actionCreator as loginActionCreator } from '../../pages/login/store'
 
 
 class Header extends Component {
@@ -44,7 +45,7 @@ class Header extends Component {
         }
     }
     render() {
-        const { handleInputFocus, handleInputBlur, focused, list } = this.props
+        const { handleInputFocus, handleInputBlur, focused, list, login, logout } = this.props
 
 
         return (
@@ -55,8 +56,10 @@ class Header extends Component {
                 <Nav>
                     <NavItem className='left active'>首页</NavItem>
                     <NavItem className='left'>下载App</NavItem>
+                    {
+                        login ? <NavItem className='right' onClick={logout}>退出</NavItem> : <Link to='/login'><NavItem className='right'>登录</NavItem></Link>
+                    }
 
-                    <NavItem className='right'>登录</NavItem>
 
                     <NavItem className='right'>
                         <i className="iconfont">&#xe636;</i>
@@ -77,20 +80,7 @@ class Header extends Component {
                         <i className={focused ? 'focused iconfont zoom' : 'iconfont zoom'}>
                             &#xe614;
 						</i>
-                        {/* {focused ? (<SearchInfo>
-                            <SearchInfoTitle>
-                                热门搜索
-                                <SearchInfoSwitch>
-                                    换一换
-                                </SearchInfoSwitch>
-                            </SearchInfoTitle>
-                            <div>
-                                {
-                                    list.map((item, index) => (<SearchInfoItem key={item + index}>{item}</SearchInfoItem>))
-                                }
-
-                            </div>
-                        </SearchInfo>) : ('')} */
+                        {
                             this.getListArea()
                         }
                     </SearchWrapper>
@@ -113,6 +103,7 @@ const mapStateToProps = (state) => {
         page: state.get('header').get('page'),
         totalPage: state.get('header').get('totalPage'),
         mouseIn: state.get('header').get('mouseIn'),
+        login: state.get('login').get('login'),
     })
 }
 const mapDispatchToProps = (dispatch) => {
@@ -146,8 +137,12 @@ const mapDispatchToProps = (dispatch) => {
             } else {
                 return dispatch(actionCreator.chanegPage(1))
             }
+        },
+        logout() {
+            dispatch(loginActionCreator.logout())
         }
     }
+
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
