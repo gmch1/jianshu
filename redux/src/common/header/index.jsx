@@ -3,6 +3,7 @@ import { HeaderWrapper, Logo, Nav, NavItem, SearchWrapper, Addition, Button, Nav
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import { actionCreator } from './store'
+import { Link } from 'react-router-dom';
 
 
 class Header extends Component {
@@ -48,7 +49,9 @@ class Header extends Component {
 
         return (
             <HeaderWrapper>
-                <Logo />
+                <Link to='/'>
+                    <Logo />
+                </Link>
                 <Nav>
                     <NavItem className='left active'>首页</NavItem>
                     <NavItem className='left'>下载App</NavItem>
